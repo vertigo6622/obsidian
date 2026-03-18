@@ -20,8 +20,8 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 ## usage:
 `.\nexus-crypter.exe [--debug] program.exe packed.exe`
 
-<img align="center" width="1000" height="100%" src="../img/splash.png" alt="nexus-crypter splashscreen">
-<img align="center" width="1000" height="100%" src="../img/putty.png" alt="putty debugging output">
+<img align="center" width="1000" height="100%" src="img/splash.png" alt="nexus-crypter splashscreen">
+<img align="center" width="1000" height="100%" src="img/putty.png" alt="putty debugging output">
 
 ## compile:
 * `.\gcc.exe stub.c -o stub.o [-DDEBUG] -fno-asynchronous-unwind-tables -fno-ident -fno-stack-protector`
