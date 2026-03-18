@@ -28,7 +28,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * `.\ld.exe stub.o -o stub.exe -nostdlib --build-id=none -s --entry=_start`
 * `.\objcopy.exe -O binary stub.exe stub.bin`
 * `.\windres.exe resource.rc -o resource.o`
-*`.\gcc.exe nexus-crypter.c resource.o -o nexus-crypter.exe -lbcrypt`
+* `.\gcc.exe nexus-crypter.c resource.o -o nexus-crypter.exe -lbcrypt`
 
 
 
