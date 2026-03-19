@@ -5,6 +5,8 @@
 *  |_|\__||____|/_/\_\ \___/.__)__)\____)|_|\_\ |__| |_|     |_|  |____||_|\_\ v8
 *   x64 pe packer - signal: vertigo.66
 *
+*   License: CC-BY-NC-SA 4.0
+*    
 *   Features:
 *   * BYOS (bring your own stub)
 *   * stub template available
