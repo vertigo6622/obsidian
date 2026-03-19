@@ -342,11 +342,13 @@ void stub_main(STUB_CONFIG* config) {
         debug_print_hex(&rt, "Allocated buffer", (uint64_t)buffer);
     #endif
 
+	// read peb to determine actual base
     void* peb = (void*)__readgsqword(0x60);
     uint8_t* actual_base = *(uint8_t**)((uint8_t*)peb + 0x10);
 
     uint8_t* encrypted = actual_base + config->sections_rva;
     uint8_t* decrypted = (uint8_t*)buffer;
+	// copy encrypted payload into the buffer
     memcpy(decrypted, encrypted, config->encrypted_size);
     #ifdef DEBUG
         debug_print(&rt, "Starting decryption");
@@ -361,6 +363,7 @@ void stub_main(STUB_CONFIG* config) {
     uint8_t* target_sections = actual_base + config->sections_rva;
     DWORD old_protect;
 
+	// set mem protection on payload memory space
     rt.pVirtualProtect(target_sections, config->encrypted_size, PAGE_READWRITE, &old_protect);
     #ifdef DEBUG
         debug_print(&rt, "Set target memory space to RW");
@@ -371,11 +374,12 @@ void stub_main(STUB_CONFIG* config) {
         debug_print(&rt, "Copied decrypted data to target location");
     #endif
 
-    // securely overwrite buffer with zero
+    // overwrite buffer with zero
     SecureWipe((unsigned char*)buffer, config->encrypted_size);
     #ifdef DEBUG
         debug_print(&rt, "Overwrote temporary buffer with zeros");
     #endif
+	// release buffer back to the os
     rt.pVirtualFree(buffer, 0, MEM_RELEASE);
     #ifdef DEBUG
         debug_print(&rt, "Released temporary buffer");
