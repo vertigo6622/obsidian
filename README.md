@@ -30,6 +30,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * mingw64 tool suite available at `https://winlibs.com/`
 * windbg or other debugger
 * python interpreter for `clean.py`
+
 **commands:**
 * `.\gcc.exe stub.c -o stub.o [-DDEBUG] -fno-asynchronous-unwind-tables -fno-ident -fno-stack-protector`
 * `.\ld.exe stub.o -o stub.exe -nostdlib --build-id=none -s --entry=_start`
