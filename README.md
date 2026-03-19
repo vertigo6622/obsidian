@@ -32,6 +32,9 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * `.\windres.exe resource.rc -o resource.o`
 * `.\gcc.exe nexus-crypter.c resource.o -o nexus-crypter.exe -lbcrypt`
 
+## license:
+this software is licensed under the CC BY-NC-SA 4.0 license.
+
 
 
 
