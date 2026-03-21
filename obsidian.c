@@ -666,7 +666,7 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     
     DBG("=== STEP 8: Locating entry point signature ===");
     uint32_t entry_offset = 0;
-    uint8_t sig[] = {0x42, 0x59, 0x4F, 0x53};
+    uint8_t sig[] = {0x0F, 0x0B, 0x0F, 0x0B};
     int found = 0;
     for (size_t i = 0; i < stub_size - sizeof(sig); i++) {
         if (stub_location[i] == sig[0] && stub_location[i+1] == sig[1] && stub_location[i+2] == sig[2] && stub_location[i+3] == sig[3]) {
