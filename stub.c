@@ -1,16 +1,25 @@
 /*
+*  obsidian - x64 pe packer
+*   * **** 
+*  *      *
+*     *     
+*         * 
+*    **     
+*       
+*       *   
+*          *
+*   *       
+*        
+*     * *  
 *
-*   __  _  ____ __  __ __ __  ____  ____ _____ __  _______  _____  ____ _____ 
-*  |  \| || ===|\ \/ /|  |  |(_ (_`/ (__`| () )\ \/ /| ()_)|_   _|| ===|| () )
-*  |_|\__||____|/_/\_\ \___/.__)__)\____)|_|\_\ |__| |_|     |_|  |____||_|\_\ v8
-*   x64 pe packer - signal: vertigo.66
+*   signal: vertigo.66
 *
-*   License: ANTI-CAPITALIST SOFTWARE LICENSE (v 1.4)
+*   License: ANTI-CAPITALIST SOFTWARE LICENSE (v 1.4 modified)
 *    
 *   Features:
-*   * BYOS (bring your own stub)
+*   * rolling xor test stub included
 *   * stub template available
-*   * extensive debug output (-DDEBUG & --debug flags)
+*   * extensive debug output (--debug flag)
 *   * randomized config marker
 *   * zeroed out optional headers
 *   * secure key generation
