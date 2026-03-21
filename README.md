@@ -3,7 +3,7 @@ x64 pe packer - signal: vertigo.66
 
 ## introduction:
 
-nexus-crypter is a custom pe parser and packer written in C. it is designed to be paired with a loader stub that decrypts and executes the packed payload. a compiled stub example is available in the stubs folder. this stub uses rolling xor obfuscation with shifts and does not contain any anti-debugging mechanisms. it is NOT encryption. this basic version is designed to go with the packer source provided.
+obsidian is a custom pe parser and packer written in C. it is designed to be paired with a loader stub that decrypts and executes the packed payload. a compiled stub example is available in the stubs folder. this stub uses rolling xor obfuscation with shifts and does not contain any anti-debugging mechanisms. it is NOT encryption. this basic version is designed to go with the packer source provided.
 
 this packer/stub has been tested to work on putty.exe, strings.exe, and can even pack itself, and then pack other executables from the packed state.
 
@@ -38,7 +38,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * virtualization
 
 ## usage:
-`.\nexus-crypter.exe [--debug] program.exe packed.exe`
+`.\obsidian.exe [--debug] program.exe packed.exe`
 
 <img align="center" width="1000" height="100%" src="img/splash.png" alt="nexus-crypter splashscreen">
 <img align="center" width="1000" height="100%" src="img/putty.png" alt="putty debugging output">
@@ -56,7 +56,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * `.\ld.exe stub.o -o stub.exe -nostdlib --build-id=none -s --entry=_start`
 * `.\objcopy.exe -O binary stub.exe stub.bin`
 * `.\windres.exe resource.rc -o resource.o`
-* `.\gcc.exe nexus-crypter.c resource.o -o nexus-crypter.exe -lbcrypt`
+* `.\gcc.exe obsidian.c resource.o -o obsidian.exe -lbcrypt`
 
 ## license:
 this software is licensed under a modified ACSL 1.4 license.
