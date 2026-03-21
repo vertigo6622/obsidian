@@ -738,10 +738,19 @@ void print_usage(const char* prog) {
 }
 
 int main(int argc, char* argv[]) {
-    printf("\n __  _  ____ __  __ __ __  ____  ____ _____ __  _______  _____  ____ _____ \n");
-    printf("|  \\| || ===|\\ \\/ /|  |  |(_ (_`/ (__`| () )\\ \\/ /| ()_)|_   _|| ===|| () )\n");
-    printf("|_|\\__||____|/_/\\_\\ \\___/.__)__)\\____)|_|\\_\\ |__| |_|     |_|  |____||_|\\_\\ v1\n");
-    printf(" x64 pe packer - signal: vertigo.66\n");
+    printf("\nobsidian - x64 pe packer\n");
+    printf(" * **** \n");
+    printf("*      *\n");
+    printf("  *\n");
+    printf("       *\n");
+    printf(" **     \n");
+    printf("\n");
+    printf("    *\n");
+    printf("       *\n");
+    printf(" *\n");
+    printf("\n");
+    printf("   * *\n\n");
+    printf("signal: vertigo.66\n");
     printf("----------------------------------------------------------------------------\n\n");
     
     int arg_offset = 1;
