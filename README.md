@@ -11,6 +11,12 @@ this packer/stub has been tested to work on putty.exe, strings.exe, and can even
 
 every pe stub/loader gets burned the moment its source becomes public. the only way to stay ahead of this is to write your own custom one. i have included a template for you to fill out with your own code. 
 
+---
+
+<img align="center" width="1000" height="100%" src="img/splash.gif" alt="obsidian splashscreen">
+
+---
+
 ## features:
 
 **community edition:**
@@ -52,7 +58,6 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 ## usage:
 `.\obsidian.exe [--debug] program.exe packed.exe`
 
-<img align="center" width="1000" height="100%" src="img/splash.gif" alt="obsidian splashscreen">
 <img align="center" width="1000" height="100%" src="img/putty.png" alt="putty debugging output">
 <img align="center" width="1000" height="100%" src="img/die.png" alt="detect-it-easy">
 <img align="center" width="1000" height="100%" src="img/die2.png" alt="detect-it-easy">
