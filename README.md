@@ -10,6 +10,8 @@ this packer/stub has been tested to work on putty.exe, strings.exe, and can even
 every pe stub/loader gets burned the moment its source becomes public. the only way to stay ahead of this is to write your own custom one. i have included a template for you to fill out with your own code. 
 
 ## features:
+
+**community edition:**
 * basic working compiled rolling xor stub (obfuscation not encryption)
 * BYOS (bring your own stub)
 * stub template
@@ -19,23 +21,28 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * secure key generation
 * checksum recalculation
 * pe section manipulation
+* progress bar and colors
+
+**pro edition(unreleased):**
+
+* SPECK 128/128 CTR encryption
+* aplib compression
+* extensive syscall anti-debug (--ultra)
+* sets mitigation policies (--ultra)
 
 ## to-do:
 
 **community edition:**
 * hash-based import lookups
-* progress bar instead of string output
 * pyinstaller support
 * remain updated to keep ahead of av detection
 
 **pro edition(unreleased):**
 
-* speck encryption
-* compression
 * license support/hardware binding
 * self-hosted key provisioning
 * proper gui
-* virtualization
+* virtualization (one day...)
 
 ## usage:
 `.\obsidian.exe [--debug] program.exe packed.exe`
