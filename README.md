@@ -82,6 +82,10 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * `.\windres.exe resource.rc -o resource.o`
 * `.\gcc.exe obsidian.c resource.o -o obsidian.exe -lbcrypt`
 
+## detections:
+
+please report any AV detections on signal or via my email: vertigo6622@protonmail.com
+
 ## license:
 this software is licensed under a modified ACSL 1.4 license.
 
