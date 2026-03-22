@@ -21,7 +21,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 
 **community edition:**
 * compiled rolling xor stub (stubs/stub.bin)
-* ASLR support (high entropy)
+* ASLR support 
 * BYOS (bring your own stub)
 * stub template
 * extensive debug output (-DDEBUG & --debug flags)
