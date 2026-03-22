@@ -38,7 +38,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * hash-based import lookups
 * pyinstaller support
 * remain updated to keep ahead of av detection
-* shikata ga nai encoding (pro)
+* SGN encoding (pro)
 
 **commercial edition(future):**
 
