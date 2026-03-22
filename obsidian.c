@@ -1,5 +1,5 @@
 /*
-*  obsidian - x64 pe packer
+*  obsidian community edition - x64 pe packer
 *   * **** 
 *  *      *
 *     *     
@@ -42,6 +42,7 @@
 #include <stdint.h>
 #include <windows.h>
 #include <bcrypt.h>
+#include <time.h>
 
 #pragma comment(lib, "bcrypt.lib")
 
@@ -68,10 +69,11 @@ static int g_debug = 0;
 #define DBG_DEC(name, val) do { if (g_debug) printf("[DEBUG] %-30s = %llu\n", name, (unsigned long long)(val)); } while(0)
 #define DBG_STR(name, val) do { if (g_debug) printf("[DEBUG] %-30s = %s\n", name, (val)); } while(0)
 
-#define INFO(fmt, ...) printf("" fmt "\n", ##__VA_ARGS__)
-#define SUCCESS(fmt, ...) printf("" fmt "\n", ##__VA_ARGS__)
+// now only prints if g_debug == 1
+#define INFO(fmt, ...) do { if (g_debug) printf("" fmt "\n", ##__VA_ARGS__); } while(0)
+#define SUCCESS(fmt, ...) do { if (g_debug) printf("" fmt "\n", ##__VA_ARGS__); } while(0)
 #define ERR(fmt, ...) fprintf(stderr, "!" fmt "\n", ##__VA_ARGS__)
-#define WARN(fmt, ...) printf("!" fmt "\n", ##__VA_ARGS__)
+#define WARN(fmt, ...) do { if (g_debug) printf("!" fmt "\n", ##__VA_ARGS__); } while(0)
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -95,8 +97,61 @@ uint32_t align_up(uint32_t value, uint32_t alignment) {
     return (value + alignment - 1) & ~(alignment - 1);
 }
 
+// new progress bar handling
+static size_t g_progress_total = 0;
+static size_t g_progress_current = 0;
+static clock_t g_progress_last_time = 0;
+
+void progress_show(const char* stage) {
+    clock_t now = clock();
+    if (g_progress_total == 0) return;
+    if ((now - g_progress_last_time) < (CLOCKS_PER_SEC / 60)) return;
+    g_progress_last_time = now;
+
+    int percent = (int)((g_progress_current * 100) / g_progress_total);
+    if (percent > 100) percent = 100;
+    
+    int width = 32;
+    int filled = (percent * width) / 100;
+    
+    printf("\r  [");
+    for (int i = 0; i < width; i++) {
+        if (i < filled)       printf("#");  
+        else                  printf("-");  
+    }
+    printf("] %3d%%  %-20s\r", percent, stage ? stage : "");
+    fflush(stdout);
+}
+
+void progress_init(size_t total, const char* stage) {
+    if (!g_debug) {
+        g_progress_total = total;
+        g_progress_current = 0;
+        g_progress_last_time = 0;
+        progress_show(stage);
+    }
+}
+
+void progress_add(size_t bytes, const char* stage) {
+    if (!g_debug) {
+        // short sleep so that the bar doesnt just slide instantly
+        Sleep(20);
+        g_progress_current += bytes;
+        progress_show(stage);
+    }
+}
+
+void progress_done(void) {
+    if (!g_debug) {
+        // make sure progress bar is 100% by end
+        progress_add(100 - g_progress_current, "finished");
+        progress_show("finished");
+        printf("\n\n");
+    }
+}
+
 // ============================================================================
-// ENCRYPTION
+// OBFUSCATION
 // ============================================================================
 
 void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
@@ -107,6 +162,9 @@ void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
     
     DBG_HEX("key ^ 0xAA (low byte)", key_xor_aa);
     DBG_HEX("(key ^ 0xAA) >> 8 (low byte)", key_xor_aa_shr8);
+
+    size_t update_interval = size / 12;
+    int progress_count = 0;
     
     for (size_t i = 0; i < size; i++) {
         uint8_t original = data[i];
@@ -122,6 +180,12 @@ void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
         data[i] ^= mask;
         data[i] += key_xor_aa;
         data[i] -= key_xor_aa_shr8;
+
+
+        if (g_progress_total > 0 && i >= progress_count * update_interval && progress_count < 12) {
+            progress_add(5, "encrypting");
+            progress_count++;
+        }
         
         if (g_debug && i < 8) {
             DBG("Byte %zu: 0x%02X -> 0x%02X (mask=0x%02X)", i, original, data[i], mask);
@@ -556,6 +620,8 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     nt->FileHeader.NumberOfSymbols = 0;
     DBG("Zeroed COFF symbol table pointers");
 
+    progress_add(5, "zeroed headers");
+
     DBG("=== STEP 3: Determining encryption region ===");
     IMAGE_SECTION_HEADER* sections = IMAGE_FIRST_SECTION(nt);
     uint32_t sections_rva = sections[0].VirtualAddress;
@@ -582,6 +648,7 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     DBG_HEX("Relocation Size", meta.RelocSize);
 
     DBG("=== STEP 4: Key generation ===");
+    progress_add(5, "generating key");
     uint64_t key = generate_key();
     meta.Key = key;
 
@@ -592,8 +659,9 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
         DBG("Created backup for verification");
     }
 
-    DBG("=== STEP 5: Encrypting payload ===");
-    INFO("Encrypting %zu bytes...", encrypt_size);
+    DBG("=== STEP 5: Obfuscating payload ===");
+    INFO("Obfuscating %zu bytes...", encrypt_size);
+    progress_add(10, "obfuscating pe");
     obfuscate_data(*pe_data + encrypt_start, encrypt_size, key);
 
     if (backup) {
@@ -666,7 +734,7 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     
     DBG("=== STEP 8: Locating entry point signature ===");
     uint32_t entry_offset = 0;
-    uint8_t sig[] = {0x0F, 0x0B, 0x0F, 0x0B};
+    uint8_t sig[] = {0x42, 0x59, 0x4F, 0x53};
     int found = 0;
     for (size_t i = 0; i < stub_size - sizeof(sig); i++) {
         if (stub_location[i] == sig[0] && stub_location[i+1] == sig[1] && stub_location[i+2] == sig[2] && stub_location[i+3] == sig[3]) {
@@ -712,6 +780,8 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     nt->OptionalHeader.CheckSum = sum;
     DBG_HEX("New checksum", sum);
 
+    progress_add(5, "finalizing packing");
+
     SUCCESS("PE packing completed successfully!");
     INFO("=== PACKING SUMMARY ===");
     INFO("Original Entry Point: 0x%08X", meta.OriginalOEP);
@@ -734,27 +804,28 @@ void print_usage(const char* prog) {
     printf("  --debug    Enable verbose debug output\n");
     printf("\nExample:\n");
     printf("  %s program.exe packed.exe\n", prog);
-    printf("  %s --debug program.exe packed.exe\n", prog);
+    printf("  %s --debug program.exe packed.exe\n\n", prog);
 }
 
 int main(int argc, char* argv[]) {
-    printf("\nobsidian - x64 pe packer\n");
-    printf(" * **** \n");
-    printf("*      *\n");
-    printf("  *\n");
-    printf("       *\n");
-    printf(" **     \n");
-    printf("\n");
-    printf("    *\n");
-    printf("       *\n");
-    printf(" *\n");
-    printf("\n");
-    printf("   * *\n\n");
+    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+    CONSOLE_SCREEN_BUFFER_INFO info;
+    GetConsoleScreenBufferInfo(h, &info);
+    WORD original = info.wAttributes;
+    // purple ascii art!
+    SetConsoleTextAttribute(h, FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+    printf("\n * ****     *       *       *       *\n");
+    printf("*      *      *   * *     * *   *      *\n");
+    printf("  *     **       *           *       **\n");
+    // set color back to grey
+    SetConsoleTextAttribute(h, original);
+    printf("obsidian community edition - x64 pe packer\n");
     printf("signal: vertigo.66\n");
-    printf("----------------------------------------------------------------------------\n\n");
+    printf("--------------------------------------------------------\n\n");
     
     int arg_offset = 1;
-    
+
+    // expand this loop for more options
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--debug") == 0) {
             g_debug = 1;
@@ -772,6 +843,9 @@ int main(int argc, char* argv[]) {
     
     const char* input_file = argv[arg_offset];
     const char* output_file = argv[arg_offset + 1];
+
+    // display progress bar with 100 points
+    progress_init(100, "starting");
     
     INFO("Input:  %s", input_file);
     INFO("Output: %s", output_file);
@@ -797,6 +871,8 @@ int main(int argc, char* argv[]) {
     }
 
     SUCCESS("Loaded stub from resource: %zu bytes", stub_size);
+    // add 10 points to the progress bar
+    progress_add(10, "loading stub");
     INFO("Loading input PE file...");
     
     FILE* f = fopen(input_file, "rb");
@@ -808,7 +884,8 @@ int main(int argc, char* argv[]) {
     fseek(f, 0, SEEK_END);
     size_t pe_size = ftell(f);
     fseek(f, 0, SEEK_SET);
-    
+
+    progress_add(10, "packing pe");
     uint8_t* pe_data = (uint8_t*)malloc(pe_size);
     if (!pe_data) {
         ERR("malloc failed for PE data");
@@ -855,7 +932,8 @@ int main(int argc, char* argv[]) {
         free(stub_copy);
         return 1;
     }
-    
+
+    progress_add(5, "writing file");
     if (fwrite(pe_data, 1, pe_size, f) != pe_size) {
         ERR("Failed to write output file");
         fclose(f);
@@ -865,12 +943,15 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     fclose(f);
+
+    progress_done();
     
     SUCCESS("Output written: %zu bytes", pe_size);
     
     free(pe_data);
     free(stub);
     free(stub_copy);
+
     
     printf("\n");
     SUCCESS("Packing complete: %s", output_file);
