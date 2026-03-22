@@ -3,9 +3,9 @@ signal: vertigo.66
 
 ## introduction:
 
-obsidian is a custom pe parser and packer written in C. it is designed to be paired with a loader stub that decrypts and executes the packed payload. 
+obsidian is a custom x64 pe packer / executable protector written in C. it is designed to be paired with a loader stub that decrypts and executes the packed payload. 
 
-a compiled stub example is available in the stubs folder. this stub uses rolling xor obfuscation with shifts and does not contain any anti-debugging mechanisms. it is NOT encryption. this basic version is designed to go with the packer source provided.
+a compiled stub example is available in the stubs folder. the stub uses rolling xor obfuscation with shifts and does not contain any anti-debugging mechanisms. it is NOT encryption. 
 
 this packer/stub has been tested to work on putty.exe, strings.exe, and can even pack itself, and then pack other executables from the packed state.
 
@@ -55,6 +55,14 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 <img align="center" width="1000" height="100%" src="img/putty.png" alt="putty debugging output">
 <img align="center" width="1000" height="100%" src="img/die.png" alt="detect-it-easy">
 <img align="center" width="1000" height="100%" src="img/die2.png" alt="detect-it-easy">
+
+## use-cases:
+
+* protecting intellectual property
+* preventing reverse-engineering
+* ensuring licences are upheld (commercial)
+* learning about PE internals
+* protecting sensitive code from prying eyes
 
 ## compile:
 **requirements:** 
