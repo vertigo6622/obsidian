@@ -52,7 +52,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 ## usage:
 `.\obsidian.exe [--debug] program.exe packed.exe`
 
-<img align="center" width="1000" height="100%" src="img/splash.png" alt="obsidian splashscreen">
+<img align="center" width="1000" height="100%" src="img/splash.gif" alt="obsidian splashscreen">
 <img align="center" width="1000" height="100%" src="img/putty.png" alt="putty debugging output">
 <img align="center" width="1000" height="100%" src="img/die.png" alt="detect-it-easy">
 <img align="center" width="1000" height="100%" src="img/die2.png" alt="detect-it-easy">
