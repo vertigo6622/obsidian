@@ -37,7 +37,6 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * SPECK 128/128 CTR encryption
 * aPlib compression
 * extensive syscall anti-debug (--ultra)
-* sets mitigation policies (--ultra)
 
 ## to-do:
 
@@ -45,7 +44,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * hash-based import lookups
 * pyinstaller support
 * remain updated to keep ahead of av detection
-* SGN encoding (pro)
+* next-gen SGN encoding (pro)
 
 **commercial edition(future):**
 
@@ -53,7 +52,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * online key provisioning
 * DRM-like protections
 * proper gui
-* virtualization (one day...)
+* virtualization
 
 ## usage:
 `.\obsidian.exe [--debug] program.exe packed.exe`
