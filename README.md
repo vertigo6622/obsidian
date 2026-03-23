@@ -5,7 +5,7 @@ signal: vertigo.66
 
 obsidian is a custom x64 pe packer / executable protector written in C. it is designed to be paired with a loader stub that decrypts and executes the packed payload. 
 
-a compiled stub example is available in the stubs folder. the stub uses rolling xor obfuscation with shifts and does not contain any anti-debugging mechanisms. it is NOT encryption. 
+a compiled stub example is available in the stubs folder that uses rolling xor obfuscation with shifts and does not contain any anti-debugging mechanisms.
 
 this packer/stub has been tested to work on putty.exe, strings.exe, and can even pack itself, and then pack other executables from the packed state.
 
