@@ -19,11 +19,12 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 
 ## features:
 
-**community edition:**
-* compiled rolling xor stub (stubs/stub.bin)
-* ASLR support 
-* BYOS (bring your own stub)
-* stub template
+**community edition-v1.1:**
+* improved xor algorithm
+* hash-based import lookups
+* compiled xorshift64+ stub (stubs/stub.bin)
+* high entropy ASLR support 
+* stub template (BYOS - bring your own stub)
 * extensive debug output (-DDEBUG & --debug flags)
 * randomized config marker
 * zeroed out optional headers
@@ -32,17 +33,17 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * pe section manipulation
 * progress bar and colors
 
-**pro edition(unreleased):**
+**pro edition-v0.8:**
 
 * SPECK 128/128 CTR encryption
 * aPlib compression
 * extensive syscall anti-debug (--ultra)
+* anti-sandbox
+* crc32 integrity checks
 
 ## to-do:
 
 **community and pro edition:**
-* improve xor algorithm
-* hash-based import lookups
 * pyinstaller support
 * remain updated to keep ahead of av detection
 * next-gen SGN encoding (pro)
