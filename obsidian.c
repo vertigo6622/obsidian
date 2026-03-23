@@ -17,7 +17,8 @@
 *   License: ANTI-CAPITALIST SOFTWARE LICENSE (v 1.4 modified)
 *    
 *   Features:
-*   * rolling xor test stub included
+*   * stub included
+*   * upgraded XORshift64 obfuscation
 *   * stub template available
 *   * extensive debug output (--debug flag)
 *   * randomized config marker
@@ -69,7 +70,6 @@ static int g_debug = 0;
 #define DBG_DEC(name, val) do { if (g_debug) printf("[DEBUG] %-30s = %llu\n", name, (unsigned long long)(val)); } while(0)
 #define DBG_STR(name, val) do { if (g_debug) printf("[DEBUG] %-30s = %s\n", name, (val)); } while(0)
 
-// now only prints if g_debug == 1
 #define INFO(fmt, ...) do { if (g_debug) printf("" fmt "\n", ##__VA_ARGS__); } while(0)
 #define SUCCESS(fmt, ...) do { if (g_debug) printf("" fmt "\n", ##__VA_ARGS__); } while(0)
 #define ERR(fmt, ...) fprintf(stderr, "!" fmt "\n", ##__VA_ARGS__)
@@ -97,7 +97,6 @@ uint32_t align_up(uint32_t value, uint32_t alignment) {
     return (value + alignment - 1) & ~(alignment - 1);
 }
 
-// new progress bar handling
 static size_t g_progress_total = 0;
 static size_t g_progress_current = 0;
 static clock_t g_progress_last_time = 0;
@@ -134,7 +133,6 @@ void progress_init(size_t total, const char* stage) {
 
 void progress_add(size_t bytes, const char* stage) {
     if (!g_debug) {
-        // short sleep so that the bar doesnt just slide instantly
         Sleep(20);
         g_progress_current += bytes;
         progress_show(stage);
@@ -143,7 +141,6 @@ void progress_add(size_t bytes, const char* stage) {
 
 void progress_done(void) {
     if (!g_debug) {
-        // make sure progress bar is 100% by end
         progress_add(100 - g_progress_current, "finished");
         progress_show("finished");
         printf("\n\n");
@@ -167,21 +164,24 @@ void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
     int progress_count = 0;
     
     for (size_t i = 0; i < size; i++) {
-        uint8_t original = data[i];
+        uint64_t subkey = key ^ (i * 0x9E3779B97F4A7C15ULL);
+        subkey = (subkey ^ (subkey >> 30)) * 0xBF58476D1CE4E5B9ULL;
+        subkey = (subkey ^ (subkey >> 27)) * 0x94D049BB133111EBULL;
+        subkey = subkey ^ (subkey >> 31);
         
         uint8_t shift1 = (uint8_t)((i * 8) & 0x3F);
         uint8_t shift2 = (uint8_t)((24 + i * 8) & 0x3F);
         uint8_t shift3 = (uint8_t)((56 + i * 8) & 0x3F);
         
-        uint8_t mask = (uint8_t)(key >> shift1)
-                     ^ (uint8_t)(key >> shift2)
-                     ^ (uint8_t)(key >> shift3);
+        uint8_t mask = (uint8_t)(subkey >> shift1)
+                     ^ (uint8_t)(subkey >> shift2)
+                     ^ (uint8_t)(subkey >> shift3);
         
+        uint8_t original = data[i];
         data[i] ^= mask;
         data[i] += key_xor_aa;
         data[i] -= key_xor_aa_shr8;
-
-
+    
         if (g_progress_total > 0 && i >= progress_count * update_interval && progress_count < 12) {
             progress_add(5, "encrypting");
             progress_count++;
@@ -203,14 +203,19 @@ void verify_obfuscation(uint8_t* original, uint8_t* encrypted, size_t size, uint
     uint8_t key_xor_aa_shr8 = (uint8_t)((key ^ 0xAA) >> 8);
     
     for (size_t i = 0; i < size; i++) {
+        uint64_t subkey = key ^ (i * 0x9E3779B97F4A7C15ULL);
+        subkey = (subkey ^ (subkey >> 30)) * 0xBF58476D1CE4E5B9ULL;
+        subkey = (subkey ^ (subkey >> 27)) * 0x94D049BB133111EBULL;
+        subkey = subkey ^ (subkey >> 31);
+        
         uint8_t shift1 = (uint8_t)((i * 8) & 0x3F);
         uint8_t shift2 = (uint8_t)((24 + i * 8) & 0x3F);
         uint8_t shift3 = (uint8_t)((56 + i * 8) & 0x3F);
         
-        uint8_t mask = (uint8_t)(key >> shift1)
-                     ^ (uint8_t)(key >> shift2)
-                     ^ (uint8_t)(key >> shift3);
-
+        uint8_t mask = (uint8_t)(subkey >> shift1)
+                     ^ (uint8_t)(subkey >> shift2)
+                     ^ (uint8_t)(subkey >> shift3);
+        
         test[i] += key_xor_aa_shr8;
         test[i] -= key_xor_aa;
         test[i] ^= mask;
@@ -220,12 +225,6 @@ void verify_obfuscation(uint8_t* original, uint8_t* encrypted, size_t size, uint
         SUCCESS("Encryption verification PASSED");
     } else {
         ERR("Encryption verification FAILED!");
-        for (size_t i = 0; i < size && i < 32; i++) {
-            if (original[i] != test[i]) {
-                DBG("Mismatch at byte %zu: expected 0x%02X, got 0x%02X", 
-                    i, original[i], test[i]);
-            }
-        }
     }
     free(test);
 }
@@ -281,6 +280,12 @@ uint64_t generate_key(void) {
 // STUB HANDLING
 // ============================================================================
 
+typedef struct {
+    uint32_t virtual_address;
+    uint32_t raw_offset;
+    uint32_t raw_size;
+} SECTION_INFO;
+
 #pragma pack(push, 1)
 typedef struct _STUB_CONFIG {
     uint64_t key;
@@ -300,6 +305,7 @@ typedef struct _STUB_CONFIG {
     uint32_t exception_size;
     uint32_t reloc_rva;
     uint32_t reloc_size;
+    uint8_t section_count;
 } STUB_CONFIG;
 #pragma pack(pop)
 
@@ -632,6 +638,24 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     meta.EncryptedSize = (uint32_t)encrypt_size;
     meta.EncryptStartOffset = (uint32_t)encrypt_start;
 
+    SECTION_INFO* section_infos = NULL;
+    uint8_t section_count = 0;
+
+    DBG("Saving section information");
+    section_count = (uint8_t)nt->FileHeader.NumberOfSections;
+    section_infos = (SECTION_INFO*)malloc(section_count * sizeof(SECTION_INFO));
+    if (section_infos) {
+        for (uint8_t i = 0; i < section_count; i++) {
+            section_infos[i].virtual_address = sections[i].VirtualAddress;
+            section_infos[i].raw_offset = sections[i].PointerToRawData - (uint32_t)encrypt_start;
+            section_infos[i].raw_size = sections[i].SizeOfRawData;
+            DBG("Section %d: VA=0x%X RawOff=0x%X RawSize=0x%X", i, 
+                section_infos[i].virtual_address, 
+                section_infos[i].raw_offset, 
+                section_infos[i].raw_size);
+        }
+    }
+
     DBG_HEX("Sections RVA", sections_rva);
     DBG_HEX("Header size", header_size);
     DBG_HEX("Encrypt start (file offset)", encrypt_start);
@@ -692,6 +716,7 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
 
     DBG("=== STEP 7: Writing stub and config ===");
     uint8_t* stub_location = *pe_data + stub_sec->PointerToRawData;
+    size_t section_infos_size = section_count * sizeof(SECTION_INFO);
     STUB_CONFIG* config_location = (STUB_CONFIG*)(stub_location + stub_size);
 
     config_location->key = meta.Key;
@@ -711,8 +736,17 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     config_location->exception_size = meta.ExceptionSize;
     config_location->reloc_rva = meta.RelocRVA;
     config_location->reloc_size = meta.RelocSize;
+    config_location->section_count = section_count;
 
     DBG("Wrote config at file offset 0x%zX", (size_t)((uint8_t*)config_location - *pe_data));
+
+    if (section_infos != NULL) {
+        SECTION_INFO* si_location = (SECTION_INFO*)((uint8_t*)config_location + sizeof(STUB_CONFIG) + 4);
+        memcpy(si_location, section_infos, section_count * sizeof(SECTION_INFO));
+        DBG("Wrote %d section infos at file offset 0x%zX", section_count, (size_t)((uint8_t*)si_location - *pe_data));
+        free(section_infos);
+        section_infos = NULL;
+    }
 
     uint32_t config_marker;
     BCryptGenRandom(NULL, (PUCHAR)&config_marker, sizeof(uint32_t), BCRYPT_USE_SYSTEM_PREFERRED_RNG);
@@ -800,6 +834,7 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
 
 void print_usage(const char* prog) {
     printf("Usage: %s [--debug] <input.exe> <output.exe>\n", prog);
+    printf("\nProtection: XORshift64+\n");
     printf("\nOptions:\n");
     printf("  --debug    Enable verbose debug output\n");
     printf("\nExample:\n");
@@ -812,20 +847,17 @@ int main(int argc, char* argv[]) {
     CONSOLE_SCREEN_BUFFER_INFO info;
     GetConsoleScreenBufferInfo(h, &info);
     WORD original = info.wAttributes;
-    // purple ascii art!
     SetConsoleTextAttribute(h, FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
     printf("\n * ****     *       *       *       *\n");
     printf("*      *      *   * *     * *   *      *\n");
     printf("  *     **       *           *       **\n");
-    // set color back to grey
     SetConsoleTextAttribute(h, original);
     printf("obsidian community edition - x64 pe packer\n");
     printf("signal: vertigo.66\n");
     printf("--------------------------------------------------------\n\n");
     
     int arg_offset = 1;
-
-    // expand this loop for more options
+    
     for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], "--debug") == 0) {
             g_debug = 1;
@@ -844,7 +876,6 @@ int main(int argc, char* argv[]) {
     const char* input_file = argv[arg_offset];
     const char* output_file = argv[arg_offset + 1];
 
-    // display progress bar with 100 points
     progress_init(100, "starting");
     
     INFO("Input:  %s", input_file);
@@ -871,7 +902,6 @@ int main(int argc, char* argv[]) {
     }
 
     SUCCESS("Loaded stub from resource: %zu bytes", stub_size);
-    // add 10 points to the progress bar
     progress_add(10, "loading stub");
     INFO("Loading input PE file...");
     
