@@ -23,7 +23,8 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * improved xor algorithm
 * hash-based import lookups
 * compiled xorshift64+ stub (stubs/stub.bin)
-* high entropy ASLR support 
+* high entropy ASLR support
+* resource encryption
 * stub template (BYOS - bring your own stub)
 * extensive debug output (-DDEBUG & --debug flags)
 * randomized config marker
@@ -49,12 +50,11 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * next-gen SGN encoding (pro)
 
 **commercial edition(future):**
-
+* gui
 * license support/hardware binding
 * online key provisioning
 * DRM-like protections
-* proper gui
-* virtualization
+* llvm obfuscation
 
 ## usage:
 `.\obsidian.exe [--debug] program.exe packed.exe`
