@@ -24,7 +24,6 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * hash-based import lookups
 * compiled xorshift64+ stub (stubs/stub.bin)
 * high entropy ASLR support
-* resource encryption
 * stub template (BYOS - bring your own stub)
 * extensive debug output (-DDEBUG & --debug flags)
 * randomized config marker
@@ -38,6 +37,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 
 * SPECK 128/128 CTR encryption
 * aPlib compression
+* resource encryption
 * extensive syscall anti-debug (--ultra)
 * anti-sandbox
 * hmac integrity checks
