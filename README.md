@@ -39,7 +39,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * aPlib compression
 * extensive syscall anti-debug (--ultra)
 * anti-sandbox
-* crc32 integrity checks
+* crc32 + hmac integrity checks
 
 ## to-do:
 
