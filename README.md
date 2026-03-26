@@ -39,6 +39,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * aPlib compression
 * resource encryption
 * extensive syscall anti-debug (--ultra)
+* lightweight stub (21kb)
 * anti-sandbox
 * hmac integrity checks
 
