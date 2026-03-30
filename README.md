@@ -9,7 +9,7 @@ a compiled stub example is available in the stubs folder that uses rolling xor o
 
 this packer/stub has been tested to work on putty.exe, strings.exe, and can even pack itself, and then pack other executables from the packed state.
 
-every pe stub/loader gets burned the moment its source becomes public. the only way to stay ahead of this is to write your own custom one. i have included a template for you to fill out with your own code. 
+every pe stub/loader gets burned the moment its source becomes public. the only way to stay ahead of this is to write your own custom one. there is an included a template for you to fill out with your own code. 
 
 ---
 
@@ -78,7 +78,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 
 ## detections:
 
-please report any AV detections on signal or via my email: vertigo6622@protonmail.com
+please report any AV detections on signal or via email: info@obsidian.st
 
 ## license:
 this software is licensed under a modified ACSL 1.4 license.
