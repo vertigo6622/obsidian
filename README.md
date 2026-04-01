@@ -35,12 +35,15 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 
 **pro edition-v0.8:**
 
+***coming soon***
+
 * SPECK 128/128 CTR encryption
 * aPlib compression
 * resource encryption
 * extensive syscall anti-debug (--ultra)
 * anti-sandbox
 * hmac integrity checks
+* ollvm-22 obfuscated
 
 ## to-do:
 
