@@ -43,7 +43,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * extensive syscall anti-debug (--ultra)
 * anti-sandbox
 * hmac integrity checks
-* ollvm-22 obfuscated
+* [ollvm-22](https://github.com/vertigo6622/ollvm-22) obfuscated
 
 ## to-do:
 
@@ -57,7 +57,6 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * license support/hardware binding
 * online key provisioning
 * DRM-like protections
-* llvm obfuscation
 
 ## usage:
 `.\obsidian.exe [--debug] program.exe packed.exe`
