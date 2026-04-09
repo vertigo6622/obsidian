@@ -1,3 +1,11 @@
+**obsidian pro is almost here!**
+
+**release date: 1200 UTC, Mon 20th April 2026**
+
+**where to find: url in repo sidebar**
+
+---
+
 # obsidian x64 pe packer
 signal: vertigo.66
 
