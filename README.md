@@ -84,7 +84,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 | :--- | :--- | :--- | :--- | :--- |
 | description: | no optimization | aggressive size optimization | control flow flattening + instruction substitution | fully obfuscated (bogus control flow, splitting, flattening, substitution) | 
 | size: | 17kb | 13kb | 17kb | 57kb |
-| tools: | clang/llvm | clang/llvm + -Oz | clang/llvm + [ollvm-22](https://github.com/vertigo6622/ollvm-22) | clang/llvm + [ollvm-22](https://github.com/vertigo6622/ollvm-22) |
+| tools: | clang/llvm | clang/llvm + -Oz | clang/llvm + -Oz + [ollvm-22](https://github.com/vertigo6622/ollvm-22) | clang/llvm + -Oz + [ollvm-22](https://github.com/vertigo6622/ollvm-22) + -Oz |
 | note: | basic | smallest/fastest | balanced | largest/slowest |
 
 ## compile:
