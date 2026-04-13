@@ -1,3 +1,8 @@
+<img align="center" width="1000" height="100%" src="img/stars-only.png" alt="obsidian logo">
+
+# obsidian x64 pe packer
+***signal: vertigo.66***
+
 **obsidian pro is almost here!**
 
 **release date: 1200 UTC, Mon 20th April 2026**
@@ -5,11 +10,6 @@
 **where to find: url in repo sidebar**
 
 ---
-
-<img align="center" width="1000" height="100%" src="img/stars-only.png" alt="obsidian logo">
-
-# obsidian x64 pe packer
-signal: vertigo.66
 
 ## introduction:
 
