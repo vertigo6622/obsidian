@@ -832,6 +832,15 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
 // MAIN
 // ============================================================================
 
+void setup_terminal_colors(void) {
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD dwMode = 0;
+    if (hOut == INVALID_HANDLE_VALUE) return;
+    GetConsoleMode(hOut, &dwMode);
+    dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+    SetConsoleMode(hOut, dwMode);
+}
+
 void print_usage(const char* prog) {
     printf("Usage: %s [--debug] <input.exe> <output.exe>\n", prog);
     printf("\nProtection: XORshift64+\n");
@@ -843,23 +852,45 @@ void print_usage(const char* prog) {
 }
 
 int main(int argc, char* argv[]) {
-    HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO info;
-    GetConsoleScreenBufferInfo(h, &info);
-    WORD original = info.wAttributes;
-    SetConsoleTextAttribute(h, FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
-    printf("\n * ****     *       *       *       *\n");
-    printf("*      *      *   * *     * *   *      *\n");
-    printf("  *     **       *           *       **\n");
-    SetConsoleTextAttribute(h, original);
-    printf("obsidian community edition - x64 pe packer\n");
-    printf("signal: vertigo.66\n");
-    printf("--------------------------------------------------------\n\n");
+    int use_pink_mode = 0; 
+    for (int i = 1; i < argc; i++) {
+        if (strcmp(argv[i], "--pink") == 0) {
+            use_pink_mode = 1;
+            break; 
+        }
+    }
+
+    if (use_pink_mode) {
+        HANDLE h = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_SCREEN_BUFFER_INFO info;
+        GetConsoleScreenBufferInfo(h, &info);
+        WORD original = info.wAttributes;
+        SetConsoleTextAttribute(h, FOREGROUND_RED | FOREGROUND_BLUE | FOREGROUND_INTENSITY);
+        printf("\n * ****     *       *       *       *\n");
+        printf("*      *      *   * *     * *   *      *\n");
+        printf("  *     **       *           *       **\n");
+        SetConsoleTextAttribute(h, original);
+        printf("obsidian community edition - x64 pe packer\n");
+        printf("signal: vertigo.66\n");
+        printf("--------------------------------------------------------\n\n");
+    } else {
+        setup_terminal_colors();
+        printf("\x1b[38;2;115;32;237m");
+        printf("\n * ****     *       *       *       *\n");
+        printf("*      *      *   * *     * *   *      *\n");
+        printf("  *     **       *           *       **\n");
+        printf("\x1b[0m");
+        printf("obsidian community edition - x64 pe packer\n");
+        printf("signal: vertigo.66\n");
+        printf("--------------------------------------------------------\n\n");
+    }
     
     int arg_offset = 1;
     
     for (int i = 1; i < argc; i++) {
-        if (strcmp(argv[i], "--debug") == 0) {
+        if (strcmp(argv[i], "--pink") == 0) {
+            arg_offset++;
+        } else if (strcmp(argv[i], "--debug") == 0) {
             g_debug = 1;
             INFO("Debug mode enabled");
             arg_offset++;
