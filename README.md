@@ -76,6 +76,17 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 <img align="center" width="1000" height="100%" src="img/die.png" alt="detect-it-easy">
 <img align="center" width="1000" height="100%" src="img/die2.png" alt="detect-it-easy">
 
+---
+
+## stub reference sheet:
+
+| | stub.bin | stub.Oz.bin | stub.obfuscated.bin | stub.full.obf.bin |
+| :--- | :--- | :--- | :--- | :--- |
+| description: | no optimization | aggressive size optimization | control flow flattening + instruction substitution | fully obfuscated (bogus control flow, splitting, flattening, substitution) | 
+| size: | 17kb | 13kb | 17kb | 57kb |
+| tools: | clang/llvm | clang/llvm + -Oz | clang/llvm + [ollvm-22](https://github.com/vertigo6622/ollvm-22) | clang/llvm + [ollvm-22](https://github.com/vertigo6622/ollvm-22) |
+| note: | basic | smallest/fastest | balanced | largest/slowest |
+
 ## compile:
 **requirements:** 
 * mingw64 tool suite available at `https://winlibs.com/`
