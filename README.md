@@ -6,6 +6,8 @@
 
 ---
 
+<img align="center" width="1000" height="100%" src="img/stars-only.png" alt="obsidian logo">
+
 # obsidian x64 pe packer
 signal: vertigo.66
 
