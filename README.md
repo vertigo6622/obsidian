@@ -2,7 +2,7 @@
 
 # obsidian community edition - x64 pe packer
 
-**obsidian pro is almost here!**
+### obsidian pro is almost here!
 
 **release date: 1200 UTC, Mon 20th April 2026**
 
