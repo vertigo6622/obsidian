@@ -4,7 +4,7 @@
 
 ### obsidian pro is here!
 
-**where to find: url in repo sidebar**
+**where to find: [obsidian.st](https://obsidian.st)**
 
 **pro edition-v1.0:**
 
