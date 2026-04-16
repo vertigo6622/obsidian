@@ -2,11 +2,19 @@
 
 # obsidian community edition - x64 pe packer
 
-### obsidian pro is almost here!
-
-**release date: 1200 UTC, Mon 20th April 2026**
+### obsidian pro is here!
 
 **where to find: url in repo sidebar**
+
+**pro edition-v1.0:**
+
+* SPECK 128/128 CTR encryption
+* aPlib compression (--compress)
+* resource encryption
+* extensive syscall anti-debug (--ultra)
+* anti-sandbox
+* hmac integrity checks
+* [ollvm-22](https://github.com/vertigo6622/ollvm-22) obfuscated
 
 ---
 
@@ -41,18 +49,6 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * checksum recalculation
 * pe section manipulation
 * progress bar and colors
-
-**pro edition-v0.8:**
-
-***coming soon***
-
-* SPECK 128/128 CTR encryption
-* aPlib compression
-* resource encryption
-* extensive syscall anti-debug (--ultra)
-* anti-sandbox
-* hmac integrity checks
-* [ollvm-22](https://github.com/vertigo6622/ollvm-22) obfuscated
 
 ## to-do:
 
