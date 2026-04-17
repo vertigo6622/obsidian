@@ -36,7 +36,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 
 ## features:
 
-**community edition-v1.1:**
+**community edition-v1.2:**
 * improved xor algorithm
 * hash-based import lookups
 * compiled xorshift64+ stub (stubs/stub.bin)
