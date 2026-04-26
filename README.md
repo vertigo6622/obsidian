@@ -7,7 +7,7 @@
 **where to find:**
 - **clearnet:** [obsidian.st](https://obsidian.st)
 - **i2p:** [obsidian.i2p](http://obsidian.i2p/?i2paddresshelper=edexepj4bnni4ct5otbivq73tjmyontztz5qa56qrni2rdldh4rq.b32.i2p)
-- **tor:** `obsidiand244wsh2jnmqvnim2becs73dims5wc5hzse3o5ywvw6ryoyd.onion/`
+- **tor:** `obsidiand244wsh2jnmqvnim2becs73dims5wc5hzse3o5ywvw6ryoyd.onion`
 
 **pro edition-v1.0:**
 
