@@ -2,14 +2,18 @@
 
 # obsidian community edition - x64 pe packer
 
-### obsidian pro is here!
+<img align="center" width="1000" height="100%" src="img/ad.png" alt="obsidian banner">
+
+### obsidian pro available now:
+
+obsidian pro is an upgraded version of obsidian community edition with SPECK encryption, aPlib compression, and anti-debugging syscalls. it is licensed using open-source obsidian [keykeeper](https://github.com/vertigo6622/obsidian-keykeeper) which sits behind a clearnet-to-tor proxy that enables anonymous license management.
 
 **where to find:**
 - **clearnet:** [obsidian.st](https://obsidian.st)
 - **i2p:** [obsidian.i2p](http://obsidian.i2p/?i2paddresshelper=edexepj4bnni4ct5otbivq73tjmyontztz5qa56qrni2rdldh4rq.b32.i2p)
 - **tor:** `obsidiand244wsh2jnmqvnim2becs73dims5wc5hzse3o5ywvw6ryoyd.onion`
 
-**pro edition-v1.0:**
+**pro edition features:**
 
 * SPECK 128/128 CTR encryption
 * aPlib compression (--compress)
