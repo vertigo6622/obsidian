@@ -63,13 +63,13 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 ## to-do:
 
 **community and pro edition:**
-* pyinstaller support
 * arm64 support
+* pyinstaller support
 * remain updated to keep ahead of av detection
-* next-gen SGN encoding (pro)
 
 **commercial edition(future):**
 * gui
+* anti-dump protection
 * license support/hardware binding
 * online key provisioning
 * DRM-like protections
