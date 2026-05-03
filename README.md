@@ -116,6 +116,7 @@ void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
 3. generate shifts and final mask variable
 4. apply transformation to data
 
+---
 
 ## stub reference sheet:
 
