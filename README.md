@@ -83,6 +83,40 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 
 ---
 
+## ce obfuscation engine:
+
+```C
+void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
+    uint8_t key_xor_aa = (uint8_t)(key ^ 0xAA);
+    uint8_t key_xor_aa_shr8 = (uint8_t)((key ^ 0xAA) >> 8);
+    
+    for (size_t i = 0; i < size; i++) {
+        uint64_t subkey = key ^ (i * 0x9E3779B97F4A7C15ULL);
+        subkey = (subkey ^ (subkey >> 30)) * 0xBF58476D1CE4E5B9ULL;
+        subkey = (subkey ^ (subkey >> 27)) * 0x94D049BB133111EBULL;
+        subkey = subkey ^ (subkey >> 31);
+        
+        uint8_t shift1 = (uint8_t)((i * 8) & 0x3F);
+        uint8_t shift2 = (uint8_t)((24 + i * 8) & 0x3F);
+        uint8_t shift3 = (uint8_t)((56 + i * 8) & 0x3F);
+        
+        uint8_t mask = (uint8_t)(subkey >> shift1)
+                     ^ (uint8_t)(subkey >> shift2)
+                     ^ (uint8_t)(subkey >> shift3);
+        
+        data[i] ^= mask;
+        data[i] += key_xor_aa;
+        data[i] -= key_xor_aa_shr8;
+    }
+}
+```
+**obfuscation process:**
+1. use constants to derive values for add and sub operations
+2. mix in 'golden ratio' constants into a subkey to increase entropy
+3. generate shifts and final mask variable
+4. apply transformation to data
+
+
 ## stub reference sheet:
 
 | | stub.bin | stub.Oz.bin | stub.obfuscated.bin | stub.full.obf.bin |
