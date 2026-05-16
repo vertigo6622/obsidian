@@ -46,7 +46,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 
 ## features:
 
-**community edition-v1.2:**
+**community edition-v1.3:**
 * ARM64 support now added!
 * improved xor algorithm
 * hash-based import lookups
