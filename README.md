@@ -1,5 +1,5 @@
 <p align="center">
-  <img align="center" width="800" height="100%" src="img/stars-only.png" alt="obsidian logo">
+  <img align="center" width="700" height="100%" src="img/stars-only.png" alt="obsidian logo">
 </p>
 <p align="center">
   <d><strong>obsidian community edition - universal pe packer</strong></d>
