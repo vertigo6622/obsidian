@@ -9,6 +9,9 @@
   <img alt="Static Badge" src="https://img.shields.io/badge/tor%20native-purple?logo=torproject">
   <img alt="Static Badge" src="https://img.shields.io/badge/nostdlib-grey?logo=C">
 </p>
+<p align="center"> 
+  <a href="https://obsidian.st" target="_blank">clearnet</a> • <a href="http://obsidiand244wsh2jnmqvnim2becs73dims5wc5hzse3o5ywvw6ryoyd.onion/" target="_blank">tor</a> • <a href="http://obsidian.i2p/?i2paddresshelper=edexepj4bnni4ct5otbivq73tjmyontztz5qa56qrni2rdldh4rq.b32.i2p" target="_blank">i2p</a>
+</p>
 
 ## introduction:
 
