@@ -27,13 +27,6 @@
 *   * checksum recalculation
 *   * pe section manipulation
 *
-*   Compile:
-*   .\gcc.exe stub.c -o stub.o [-DDEBUG] -fno-asynchronous-unwind-tables -fno-ident -fno-stack-protector
-*   .\ld.exe stub.o -o stub.exe -nostdlib --build-id=none -s --entry=_start
-*   .\objcopy.exe -O binary stub.exe stub.bin
-*   .\windres.exe resource.rc -o resource.o 
-*   .\gcc.exe nexus-crypter.c resource.o -o nexus-crypter.exe -lbcrypt
-*
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -47,6 +40,10 @@
 
 #pragma comment(lib, "bcrypt.lib")
 
+#ifndef IMAGE_FILE_MACHINE_ARM64
+#define IMAGE_FILE_MACHINE_ARM64 0xAA64
+#endif
+
 typedef enum _PROCESSINFOCLASS {
     ProcessDebugPort = 7
 } PROCESSINFOCLASS;
@@ -57,9 +54,12 @@ typedef unsigned long long DWORD_PTR;
 typedef unsigned char BYTE;
 
 #define NT_SUCCESS(Status) (((NTSTATUS)(Status)) >= 0)
-#define STUB_BIN 100
+
+#define STUB_RES_AMD64 100
+#define STUB_RES_ARM64 101
 
 static int g_debug = 0;
+static uint16_t g_target_machine = 0;
 
 // ============================================================================
 // DEBUG MACROS
@@ -383,11 +383,13 @@ int validate_pe(uint8_t* pe, size_t size, IMAGE_NT_HEADERS** out_nt) {
     }
     DBG("NT signature OK");
     
-    if (nt->FileHeader.Machine != IMAGE_FILE_MACHINE_AMD64) {
-        ERR("Not x64 PE: Machine = 0x%04X", nt->FileHeader.Machine);
+    if (nt->FileHeader.Machine != IMAGE_FILE_MACHINE_AMD64 &&
+        nt->FileHeader.Machine != IMAGE_FILE_MACHINE_ARM64) {
+        ERR("Not x64 or ARM64 PE: Machine = 0x%04X", nt->FileHeader.Machine);
         return 0;
     }
-    DBG("Machine type: x64");
+    g_target_machine = nt->FileHeader.Machine;
+    DBG("Machine type: %s", nt->FileHeader.Machine == IMAGE_FILE_MACHINE_AMD64 ? "x64" : "ARM64");
     
     if (nt->OptionalHeader.Magic != IMAGE_NT_OPTIONAL_HDR64_MAGIC) {
         ERR("Not PE32+: Magic = 0x%04X", nt->OptionalHeader.Magic);
@@ -510,10 +512,14 @@ IMAGE_SECTION_HEADER* add_section(uint8_t** pe_data, size_t* pe_size,
     first_sec = IMAGE_FIRST_SECTION(nt);
     
     IMAGE_SECTION_HEADER* last_sec = first_sec + (nt->FileHeader.NumberOfSections - 1);
+    uint32_t last_sec_end = last_sec->SizeOfRawData;
+    
+    if (last_sec_end == 0 && last_sec->Misc.VirtualSize > 0) {
+        last_sec_end = last_sec->Misc.VirtualSize;
+    }
     
     uint32_t new_rva = align_up(
-        last_sec->VirtualAddress + 
-        (last_sec->Misc.VirtualSize ? last_sec->Misc.VirtualSize : last_sec->SizeOfRawData),
+        last_sec->VirtualAddress + last_sec_end,
         sect_align
     );
     
@@ -647,7 +653,7 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     if (section_infos) {
         for (uint8_t i = 0; i < section_count; i++) {
             section_infos[i].virtual_address = sections[i].VirtualAddress;
-            section_infos[i].raw_offset = sections[i].PointerToRawData - (uint32_t)encrypt_start;
+            section_infos[i].raw_offset = sections[i].PointerToRawData - (uint32_t)header_size;
             section_infos[i].raw_size = sections[i].SizeOfRawData;
             DBG("Section %d: VA=0x%X RawOff=0x%X RawSize=0x%X", i, 
                 section_infos[i].virtual_address, 
@@ -694,7 +700,7 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     }
 
     DBG("=== STEP 6: Adding stub section ===");
-    size_t total_stub_size = stub_size + sizeof(STUB_CONFIG);
+    size_t total_stub_size = stub_size + sizeof(STUB_CONFIG) + 4 + (sizeof(SECTION_INFO) * nt->FileHeader.NumberOfSections);
     DBG_HEX("Stub code size", stub_size);
     DBG_HEX("Config size", sizeof(STUB_CONFIG));
     DBG_HEX("Total stub section content", total_stub_size);
@@ -768,11 +774,25 @@ int pack_pe(uint8_t** pe_data, size_t* pe_size, uint8_t* stub, size_t stub_size)
     
     DBG("=== STEP 8: Locating entry point signature ===");
     uint32_t entry_offset = 0;
-    uint8_t sig[] = {0x0F, 0x0B, 0x0F, 0x0B};
+    uint8_t sig_amd64[] = {           /* redacted */           };
+    uint8_t sig_arm64[] = {           /* redacted */           };
+    uint8_t* sig;
+    size_t sig_len;
+
+    if (g_target_machine == IMAGE_FILE_MACHINE_ARM64) {
+        sig = sig_arm64;
+        sig_len = sizeof(sig_arm64);
+        DBG("Using ARM64 entry signature (BRK #0)");
+    } else {
+        sig = sig_amd64;
+        sig_len = sizeof(sig_amd64);
+        DBG("Using AMD64 entry signature (UD2 UD2)");
+    }
+
     int found = 0;
-    for (size_t i = 0; i < stub_size - sizeof(sig); i++) {
-        if (stub_location[i] == sig[0] && stub_location[i+1] == sig[1] && stub_location[i+2] == sig[2] && stub_location[i+3] == sig[3]) {
-            entry_offset = (uint32_t)i + 4;
+    for (size_t i = 0; i < stub_size - sig_len; i++) {
+        if (memcmp(stub_location + i, sig, sig_len) == 0) {
+            entry_offset = (uint32_t)i + (uint32_t)sig_len;
             found = 1;
             DBG("Found entry signature at stub offset 0x%X", entry_offset);
             break;
@@ -843,7 +863,7 @@ void setup_terminal_colors(void) {
 
 void print_usage(const char* prog) {
     printf("Usage: %s [--debug] <input.exe> <output.exe>\n", prog);
-    printf("\nProtection: XORshift64+\n");
+    printf("\nProtection: XORshift64+ (AMD64/ARM64)\n");
     printf("\nOptions:\n");
     printf("  --debug    Enable verbose debug output\n");
     printf("\nExample:\n");
@@ -870,7 +890,7 @@ int main(int argc, char* argv[]) {
         printf("*      *      *   * *     * *   *      *\n");
         printf("  *     **       *           *       **\n");
         SetConsoleTextAttribute(h, original);
-        printf("obsidian community edition - x64 pe packer\n");
+        printf("obsidian community edition - universal pe packer\n");
         printf("signal: vertigo.66\n");
         printf("--------------------------------------------------------\n\n");
     } else {
@@ -880,7 +900,7 @@ int main(int argc, char* argv[]) {
         printf("*      *      *   * *     * *   *      *\n");
         printf("  *     **       *           *       **\n");
         printf("\x1b[0m");
-        printf("obsidian community edition - x64 pe packer\n");
+        printf("obsidian community edition - universal pe packer\n");
         printf("signal: vertigo.66\n");
         printf("--------------------------------------------------------\n\n");
     }
@@ -911,31 +931,8 @@ int main(int argc, char* argv[]) {
     
     INFO("Input:  %s", input_file);
     INFO("Output: %s", output_file);
-    INFO("Loading compiled stub binary...");
-    
-    HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(100), RT_RCDATA);
-    if (!hRes) {
-        ERR("Failed to find stub resource");
-        return 1;
-    }
-
-    HGLOBAL hData = LoadResource(NULL, hRes);
-    if (!hData) {
-        ERR("Failed to load stub resource");
-        return 1;
-    }
-
-    DWORD stub_size = SizeofResource(NULL, hRes);
-    uint8_t* stub = (uint8_t*)LockResource(hData);
-    if (!stub) {
-        ERR("Failed to lock stub resource");
-        return 1;
-    }
-
-    SUCCESS("Loaded stub from resource: %zu bytes", stub_size);
-    progress_add(10, "loading stub");
     INFO("Loading input PE file...");
-    
+
     FILE* f = fopen(input_file, "rb");
     if (!f) {
         ERR("Cannot open input file: %s", input_file);
@@ -946,12 +943,10 @@ int main(int argc, char* argv[]) {
     size_t pe_size = ftell(f);
     fseek(f, 0, SEEK_SET);
 
-    progress_add(10, "packing pe");
     uint8_t* pe_data = (uint8_t*)malloc(pe_size);
     if (!pe_data) {
         ERR("malloc failed for PE data");
         fclose(f);
-        free(stub);
         return 1;
     }
     
@@ -959,20 +954,51 @@ int main(int argc, char* argv[]) {
         ERR("Failed to read input file");
         fclose(f);
         free(pe_data);
-        free(stub);
         return 1;
     }
     fclose(f);
     
     SUCCESS("Loaded PE: %zu bytes", pe_size);
+    progress_add(10, "validating pe");
+
     IMAGE_NT_HEADERS* nt;
     if (!validate_pe(pe_data, pe_size, &nt)) {
         ERR("PE validation failed");
         free(pe_data);
-        free(stub);
         return 1;
     }
-    
+
+    DWORD stub_res_id = (g_target_machine == IMAGE_FILE_MACHINE_ARM64) ? STUB_RES_ARM64 : STUB_RES_AMD64;
+    const char* arch_name = (g_target_machine == IMAGE_FILE_MACHINE_ARM64) ? "ARM64" : "AMD64";
+    INFO("Detected architecture: %s, loading %s stub (resource %u)", arch_name, arch_name, stub_res_id);
+
+    INFO("Loading compiled stub binary...");
+    HRSRC hRes = FindResource(NULL, MAKEINTRESOURCE(stub_res_id), RT_RCDATA);
+    if (!hRes) {
+        ERR("Failed to find stub resource (id %u)", stub_res_id);
+        free(pe_data);
+        return 1;
+    }
+
+    HGLOBAL hData = LoadResource(NULL, hRes);
+    if (!hData) {
+        ERR("Failed to load stub resource");
+        free(pe_data);
+        return 1;
+    }
+
+    DWORD stub_size = SizeofResource(NULL, hRes);
+    uint8_t* stub = (uint8_t*)LockResource(hData);
+    if (!stub) {
+        ERR("Failed to lock stub resource");
+        free(pe_data);
+        return 1;
+    }
+
+    SUCCESS("Loaded %s stub from resource: %zu bytes", arch_name, stub_size);
+    progress_add(10, "loading stub");
+
+    progress_add(10, "packing pe");
     uint8_t* stub_copy = (uint8_t*)malloc(stub_size);
     memcpy(stub_copy, stub, stub_size);
 
