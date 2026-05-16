@@ -47,7 +47,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 ## features:
 
 **community edition-v1.3:**
-* ARM64 support now added!
+* ARM64 support now added
 * improved xor algorithm
 * hash-based import lookups
 * compiled xorshift64+ stub (stubs/stub.bin)
@@ -125,7 +125,7 @@ void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
 | description: | no optimization | aggressive size optimization | control flow flattening + instruction substitution | fully obfuscated (bogus control flow, splitting, flattening, substitution) | arm64 variant, -O1 optimized |
 | size: | 17kb | 13kb | 17kb | 57kb | 5kb |
 | tools: | clang/llvm | clang/llvm + Oz | clang/llvm + Oz + [ollvm-22](https://github.com/vertigo6622/ollvm-22) | clang/llvm + Oz + [ollvm-22](https://github.com/vertigo6622/ollvm-22) | clang/llvm + O1 |
-| note: | basic | smallest/fastest | balanced | largest/slowest | source unreleased |
+| note: | basic | smallest/fastest | balanced | largest/slowest | only available in 1.3 release (no .bin for now) |
 
 ## compile:
 **requirements:** 
