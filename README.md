@@ -129,16 +129,60 @@ void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
 
 ## compile:
 **requirements:** 
+
+gcc:
 * mingw64 tool suite available at `https://winlibs.com/`
 * windbg or other debugger
 * python interpreter for `clean.py`
 
-**commands:**
-* `.\gcc.exe stub.c -o stub.o [-DDEBUG] -fno-asynchronous-unwind-tables -fno-ident -fno-stack-protector`
-* `.\ld.exe stub.o -o stub.exe -nostdlib --build-id=none -s --entry=_start`
-* `.\objcopy.exe -O binary stub.exe stub.bin`
-* `.\windres.exe resource.rc -o resource.o`
-* `.\gcc.exe obsidian.c resource.o -o obsidian.exe -lbcrypt`
+llvm/clang:
+* llvm 22 toolchain
+* mingw64 tool suite
+
+### commands:
+
+**step 1: build stub object file**
+
+gcc:
+```
+.\gcc.exe stub.c -o stub.o -fno-asynchronous-unwind-tables -fno-ident -fno-stack-protector
+```
+
+llvm/clang:
+```
+clang --target=x86_64-pc-windows-gnu \
+    -I/llvm-mingw-20260311-ucrt-macos-universal/generic-w64-mingw32/include \
+    -masm=intel \
+    -fno-asynchronous-unwind-tables -fno-ident -fno-stack-protector -Oz \
+    -c stub.c -o stub.o
+```
+
+**step 2: link and strip stub binary**
+
+both:
+```
+.\ld.exe stub.o -o stub.exe -nostdlib --build-id=none -s --entry=_start
+```
+```
+.\objcopy.exe -O binary stub.exe stub.bin
+```
+```
+.\windres.exe resource.rc -o resource.o
+```
+
+**step 3: build obsidian ce**
+
+gcc:
+```
+.\gcc.exe obsidian.c resource.o -o obsidian.exe -lbcrypt
+```
+
+llvm/clang:
+```
+x86_64-w64-mingw32-clang \
+  -I/llvm-mingw-20260311-ucrt-macos-universal/generic-w64-mingw32/include -O1 \
+  adv-crypter.c resource.o -o adv-crypter.exe -lbcrypt
+```
 
 ## license:
 this software is licensed under a modified ACSL 1.4 license.
