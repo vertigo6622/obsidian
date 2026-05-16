@@ -1,6 +1,6 @@
 <img align="center" width="1000" height="100%" src="img/stars-only.png" alt="obsidian logo">
 
-# obsidian community edition - x64 pe packer
+# obsidian community edition - universal pe packer
 
 <a href="https://obsidian.st" target="_blank">
   <img align="center" width="1000" height="100%" src="img/ad.png" alt="obsidian logo">
@@ -30,7 +30,7 @@ obsidian pro is an upgraded version of obsidian community edition with SPECK enc
 
 ## introduction:
 
-obsidian is a custom x64 pe packer / executable protector written in C. it is designed to be paired with a loader stub that decrypts and executes the packed payload. 
+obsidian is a custom universal pe packer / executable protector written in C. it is designed to be paired with a loader stub that decrypts and executes the packed payload. 
 
 a compiled stub example is available in the stubs folder that uses rolling xor obfuscation with shifts and does not contain any anti-debugging mechanisms.
 
@@ -47,6 +47,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 ## features:
 
 **community edition-v1.2:**
+* ARM64 support now added!
 * improved xor algorithm
 * hash-based import lookups
 * compiled xorshift64+ stub (stubs/stub.bin)
@@ -63,7 +64,6 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 ## to-do:
 
 **community and pro edition:**
-* arm64 support
 * pyinstaller support
 * remain updated to keep ahead of av detection
 
@@ -75,7 +75,7 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * DRM-like protections
 
 ## usage:
-`.\obsidian.exe [--debug] program.exe packed.exe`
+`.\obsidian.ce.universal.exe program.exe packed.exe`
 
 <img align="center" width="1000" height="100%" src="img/putty.png" alt="putty debugging output">
 <img align="center" width="1000" height="100%" src="img/die.png" alt="detect-it-easy">
