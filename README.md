@@ -120,12 +120,12 @@ void obfuscate_data(uint8_t* data, size_t size, uint64_t key) {
 
 ## stub reference sheet:
 
-| | stub.bin | stub.Oz.bin | stub.obfuscated.bin | stub.full.obf.bin |
-| :--- | :--- | :--- | :--- | :--- |
-| description: | no optimization | aggressive size optimization | control flow flattening + instruction substitution | fully obfuscated (bogus control flow, splitting, flattening, substitution) | 
-| size: | 17kb | 13kb | 17kb | 57kb |
-| tools: | clang/llvm | clang/llvm + Oz | clang/llvm + Oz + [ollvm-22](https://github.com/vertigo6622/ollvm-22) | clang/llvm + Oz + [ollvm-22](https://github.com/vertigo6622/ollvm-22) |
-| note: | basic | smallest/fastest | balanced | largest/slowest |
+| | stub.bin | stub.Oz.bin | stub.obfuscated.bin | stub.full.obf.bin | stub-arm64.bin |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| description: | no optimization | aggressive size optimization | control flow flattening + instruction substitution | fully obfuscated (bogus control flow, splitting, | flattening, substitution) | arm64 variant, -O1 optimized |
+| size: | 17kb | 13kb | 17kb | 57kb | 5kb |
+| tools: | clang/llvm | clang/llvm + Oz | clang/llvm + Oz + [ollvm-22](https://github.com/vertigo6622/ollvm-22) | clang/llvm + Oz + [ollvm-22](https://github.com/vertigo6622/ollvm-22) | clang/llvm + O1 |
+| note: | basic | smallest/fastest | balanced | largest/slowest | small/fast (arm) |
 
 ## compile:
 **requirements:** 
