@@ -1,7 +1,3 @@
-<img align="center" width="1000" height="100%" src="img/stars-only.png" alt="obsidian logo">
-
-# obsidian community edition - universal pe packer
-
 <a href="https://obsidian.st" target="_blank">
   <img align="center" width="1000" height="100%" src="img/ad.png" alt="obsidian logo">
 </a>
@@ -27,6 +23,10 @@ obsidian pro is an upgraded version of obsidian community edition with SPECK enc
 * [ollvm-22](https://github.com/vertigo6622/ollvm-22) obfuscated
 
 ---
+
+<img align="center" width="1000" height="100%" src="img/stars-only.png" alt="obsidian logo">
+
+# obsidian community edition - universal pe packer
 
 ## introduction:
 
