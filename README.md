@@ -2,7 +2,9 @@
   <img align="center" width="800" height="100%" src="img/stars-only.png" alt="obsidian logo">
 </p>
 <p align="center">
-  <d>obsidian community edition - universal pe packer</d>
+  <d><strong>obsidian community edition - universal pe packer</strong></d>
+  <br/>
+  <sup>advanced, open-source obfuscation</sup>
 </p>
 <p align="center">
   <img alt="Static Badge" src="https://img.shields.io/badge/*-obsidian-indigo?labelColor=indigo">
@@ -12,6 +14,8 @@
 <p align="center"> 
   <a href="https://obsidian.st" target="_blank">clearnet</a> • <a href="http://obsidiand244wsh2jnmqvnim2becs73dims5wc5hzse3o5ywvw6ryoyd.onion/" target="_blank">tor</a> • <a href="http://obsidian.i2p/?i2paddresshelper=edexepj4bnni4ct5otbivq73tjmyontztz5qa56qrni2rdldh4rq.b32.i2p" target="_blank">i2p</a>
 </p>
+
+---
 
 ## introduction:
 
