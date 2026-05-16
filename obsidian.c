@@ -1,5 +1,5 @@
 /*
-*  obsidian community edition - x64 pe packer
+*  obsidian community edition - universal pe packer (amd64 + arm64) - v1.3
 *   * **** 
 *  *      *
 *     *     
