@@ -10,31 +10,6 @@
   <img alt="Static Badge" src="https://img.shields.io/badge/nostdlib-grey?logo=C">
 </p>
 
----
-
-<a href="https://obsidian.st" target="_blank">
-  <img align="center" width="1000" height="100%" src="img/ad.png" alt="obsidian logo">
-</a>
-
-### obsidian pro available now:
-
-obsidian pro is an upgraded version of obsidian community edition with SPECK encryption, aPlib compression, and anti-debugging syscalls. it is licensed using open-source obsidian [keykeeper](https://github.com/vertigo6622/obsidian-keykeeper) which sits behind a clearnet-to-tor proxy, enabling anonymous license management.
-
-**where to find:**
-- **clearnet:** [obsidian.st](https://obsidian.st)
-- **i2p:** [obsidian.i2p](http://obsidian.i2p/?i2paddresshelper=edexepj4bnni4ct5otbivq73tjmyontztz5qa56qrni2rdldh4rq.b32.i2p)
-- **tor:** `obsidiand244wsh2jnmqvnim2becs73dims5wc5hzse3o5ywvw6ryoyd.onion`
-
-**pro edition features:**
-
-* SPECK 128/128 CTR encryption
-* aPlib compression (--compress)
-* resource encryption
-* extensive syscall anti-debug (--ultra)
-* anti-sandbox
-* hmac integrity checks
-* [ollvm-22](https://github.com/vertigo6622/ollvm-22) obfuscated
-
 ## introduction:
 
 obsidian is a custom universal pe packer / executable protector written in C. it is designed to be paired with a loader stub that decrypts and executes the packed payload. 
@@ -67,6 +42,33 @@ every pe stub/loader gets burned the moment its source becomes public. the only 
 * checksum recalculation
 * pe section manipulation
 * progress bar and colors
+
+---
+
+<a href="https://obsidian.st" target="_blank">
+  <img align="center" width="1000" height="100%" src="img/ad.png" alt="obsidian logo">
+</a>
+
+### obsidian pro available now:
+
+obsidian pro is an upgraded version of obsidian community edition with SPECK encryption, aPlib compression, and anti-debugging syscalls. it is licensed using open-source obsidian [keykeeper](https://github.com/vertigo6622/obsidian-keykeeper) which sits behind a clearnet-to-tor proxy, enabling anonymous license management.
+
+**where to find:**
+- **clearnet:** [obsidian.st](https://obsidian.st)
+- **i2p:** [obsidian.i2p](http://obsidian.i2p/?i2paddresshelper=edexepj4bnni4ct5otbivq73tjmyontztz5qa56qrni2rdldh4rq.b32.i2p)
+- **tor:** `obsidiand244wsh2jnmqvnim2becs73dims5wc5hzse3o5ywvw6ryoyd.onion`
+
+**pro edition features:**
+
+* SPECK 128/128 CTR encryption
+* aPlib compression (--compress)
+* resource encryption
+* extensive syscall anti-debug (--ultra)
+* anti-sandbox
+* hmac integrity checks
+* [ollvm-22](https://github.com/vertigo6622/ollvm-22) obfuscated
+
+---
 
 ## to-do:
 
