@@ -1,7 +1,20 @@
+<p align="center">
+  <img align="center" width="800" height="100%" src="img/stars-only.png" alt="obsidian logo">
+</p>
+<p align="center">
+  <d>obsidian community edition - universal pe packer</d>
+</p>
+<p align="center">
+  <img alt="Static Badge" src="https://img.shields.io/badge/*-obsidian-indigo?labelColor=indigo">
+  <img alt="Static Badge" src="https://img.shields.io/badge/tor%20native-purple?logo=torproject">
+  <img alt="Static Badge" src="https://img.shields.io/badge/nostdlib-grey?logo=C">
+</p>
+
+---
+
 <a href="https://obsidian.st" target="_blank">
   <img align="center" width="1000" height="100%" src="img/ad.png" alt="obsidian logo">
 </a>
-
 
 ### obsidian pro available now:
 
@@ -21,12 +34,6 @@ obsidian pro is an upgraded version of obsidian community edition with SPECK enc
 * anti-sandbox
 * hmac integrity checks
 * [ollvm-22](https://github.com/vertigo6622/ollvm-22) obfuscated
-
----
-
-<img align="center" width="1000" height="100%" src="img/stars-only.png" alt="obsidian logo">
-
-# obsidian community edition - universal pe packer
 
 ## introduction:
 
