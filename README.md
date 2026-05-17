@@ -205,9 +205,20 @@ x86_64-w64-mingw32-clang \
   -I/llvm-mingw-20260311-ucrt-macos-universal/generic-w64-mingw32/include -O1 \
   adv-crypter.c resource.o -o adv-crypter.exe -lbcrypt
 ```
+<p align="center">
+  <a href="https://deepwiki.com/vertigo6622/obsidian-protector"><img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki"></a>
+  <img alt="Total downloads from the releases of this repo" src="https://img.shields.io/github/downloads/vertigo6622/obsidian-protector/total">
+  <img alt="License" src="https://img.shields.io/badge/license-ASCL%201.4-indigo">
+  <img alt="Commit activity for this repo" src="https://img.shields.io/github/commit-activity/w/vertigo6622/obsidian-protector">
+</p>
+<p align="center">
+  <img alt="arm64" src="https://img.shields.io/badge/architecture-ARM64-blue">
+  <img alt="Static Badge" src="https://img.shields.io/badge/architecture-AMD64-orange">
+  <a href="#" target="_blank">
+    <img alt="Static Badge" src="https://img.shields.io/badge/donate-red">
+  </a>
 
-## license:
-this software is licensed under a modified ACSL 1.4 license.
+</p>
 
 
 
