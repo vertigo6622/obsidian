@@ -9,7 +9,11 @@
 <p>
   <a href="https://obsidian.st/" target="_blank">
     <img alt="Static Badge" src="https://img.shields.io/badge/*-obsidian-indigo?labelColor=indigo">
+  </a>
+  <a href="https://metrics.torproject.org/rs.html#details/714FCD4134044155A16A4EB440E30EF1F52B19B1" target="_blank">
     <img alt="Static Badge" src="https://img.shields.io/badge/tor%20native-purple?logo=torproject">
+  </a>
+  <a href="/stub.c">
     <img alt="Static Badge" src="https://img.shields.io/badge/nostdlib-grey?logo=C">
   </a>
 </p>
