@@ -217,7 +217,6 @@ x86_64-w64-mingw32-clang \
   <a href="#" target="_blank">
     <img alt="Static Badge" src="https://img.shields.io/badge/donate-red">
   </a>
-
 </p>
 
 
