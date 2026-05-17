@@ -217,7 +217,7 @@ x86_64-w64-mingw32-clang \
 <p align="center">
   <img alt="arm64" src="https://img.shields.io/badge/architecture-ARM64-blue">
   <img alt="Static Badge" src="https://img.shields.io/badge/architecture-AMD64-orange">
-  <a href="#" target="_blank">
+  <a href="https://obsidian.st/donate" target="_blank">
     <img alt="Static Badge" src="https://img.shields.io/badge/donate-red">
   </a>
 </p>
